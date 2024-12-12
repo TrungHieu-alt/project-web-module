@@ -36,3 +36,441 @@
     transform: rotate(360deg);
   }
 }
+.main{
+  background: #93867F;
+  display: flex; 
+  padding: 30px;
+}
+
+.infor-section{
+  margin-right: 30px;
+}
+
+.more{
+  height: 260px;
+  width: 340px;
+  margin-top: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 10px;
+}
+.small{
+  height: 110px;
+  width: 145px;
+  padding: 10px;
+  background-color: #333333;
+  border-radius: 20px;
+  color: white;
+  
+}
+
+.small:hover{
+  box-shadow: 0 0 20px rgba(255, 70, 0, 0.6); 
+}
+
+.small.ai{
+  text-align: center;
+}
+
+.small.ai span {
+  font-size: 20px;
+  font-weight: bolder;
+  color: #FFC107;
+}
+
+.eye{
+  cursor: pointer;
+  display: flex;
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  margin-top: 12px;
+  transition: transform 0.3s ease;
+}
+
+.eye:hover{
+  transform: scale(1.2);
+}
+
+.eye.on i {
+  background: linear-gradient(to right, #ffa500, #ffdd00);  
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.eye.off {
+  color: white;
+}
+
+.eye i {
+  font-size: 50px;
+}
+
+.weather{
+  height: 220px;
+  width: 300px;
+  padding: 20px;
+  background-color: #333333;
+  border-radius: 20px;
+  color: #B1DDF1;
+}
+
+.weather:hover{
+  box-shadow: 0 0 20px rgba(255, 70, 0, 0.6); 
+}
+
+.weather-text{
+  font-weight: bolder;
+  font-size: 30px;
+  text-align: center;
+}
+
+.weather-text i {
+  margin-right: 10px;
+}
+
+.weather img {
+  margin-top: 5px;
+  width: 80px;
+  height: 80px;
+}
+
+.time {
+  display: flex;
+  justify-content: center;
+  margin-left: 50px;
+}
+
+.time i {
+  margin: 0px 10px;
+}
+
+.last-update{
+  font-style: italic;
+  font-size: 12px;
+  color: #93867F;
+}
+
+.temp-div {
+  display: flex;
+  justify-content: space-between;
+}
+
+.temp {
+  font-size: 60px;
+  padding: 0;
+}
+
+.others {
+  display: flex;
+  justify-content: space-between;
+}
+
+.feel-like {
+  font-size: 15px;
+}
+
+.hum-container{
+  margin-top: 5px;
+}
+
+.humidity-text{
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.humidity-text.hum {
+  color: #74C0FC;
+}
+
+.humidity-text.rain {
+  color: #93867F;
+}
+
+.humidity-text.wind {
+  color: #B1DDF1;
+  
+}
+
+.humidity-text i {
+  margin-right: 10px;
+  margin-left: 5px;
+}
+
+.rain-div{
+  margin-top: 12px;
+}
+
+.wind-div{
+  margin-top: 12px;
+}
+.light-control{
+  padding: 30px;
+  width: 100%;
+  background-color: #333333;
+  border-radius: 20px;
+  color: white;
+  display: flex;
+}
+
+.light-control:hover{
+  box-shadow: 0 0 20px rgba(255, 70, 0, 0.6); 
+}
+
+.header{
+  margin: 0px 15%;
+  margin-bottom: 30px;
+  width: 70%;
+  display: flex;
+  justify-content: space-around;
+}
+.header span{
+  font-size: 25px;
+  font-weight: bolder;
+  color: #FF3A3A;
+} 
+
+.switch {
+  margin-top: 3px;
+  width: 50px;
+  height: 20px;
+  background-color: #ccc;
+  border-radius: 30px;
+  display: flex;
+  align-items: center;
+  padding: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.switch.on {
+  background-color: #FF3A3A;
+}
+
+/* Nút gạt */
+.toggle {
+  width: 20px;
+  height: 20px;
+  background-color: white;
+  border-radius: 50%;
+  transition: transform 0.3s ease;
+  transform: translateX(0);
+}
+
+/* Khi bật (ON) */
+.switch.on .toggle {
+  transform: translateX(30px); /* Di chuyển nút gạt */
+}
+
+.virtual-light{
+  display: flex;
+  justify-content: center;
+  margin-bottom: 30px;
+}
+
+.light {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background-color: #282c34;
+  box-shadow: 0 0 30px rgba(255, 215, 0, 0.6); 
+  animation: glow 1.5s infinite alternate;
+}
+
+.light.on{
+  background-color: #FFD700;
+}
+
+/* Kiểu dáng cho Mode */
+.mode-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+
+.mode-text{
+  color: #FF5733;
+  font-size: 15px;
+  font-weight: bold;
+}
+
+.mode {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+.mode-block {
+  margin: 0px 30px ;
+  margin-bottom: 10px;
+  width: 110px;
+  height: 80px;
+  background-color: #C73E1D;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: transform 0.2s, background-color 0.3s, box-shadow 0.3s;
+  user-select: none;
+}
+
+
+.mode-block:hover {
+  transform: scale(1.05);
+  background-color: #9C27B0;
+}
+
+.mode-block.selected {
+  background-color: #9C27B0;
+  box-shadow: 0 0 10px  #9C27B0 0 0 20px #9C27B0;
+}
+
+.intensity {
+  text-align: center;
+  width: 150px;
+  padding-top: 30px;
+}
+
+.intensity span {
+  color: #FF5733;
+  font-size: 15px;
+  font-weight: bold;
+
+}
+
+.slider-container{
+  display: flex;
+  justify-content: center;
+}
+
+.slider{
+  margin-top: 30px;
+  height: 250px; 
+  width: 8px; 
+  background-color: #ddd; 
+  border-radius: 4px;
+  position: relative;
+}
+
+.thumb {
+  height: 20px; 
+  width: 20px;
+  background-color: #FF5733; 
+  border: 4px solid white;
+  border-radius: 50%;
+  cursor: grab;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  transition: 0.05s;
+}
+
+.thumb:hover, .thumb:active {
+  height: 25px; 
+  width: 25px;
+}
+
+.track {
+  background-color: #FF5733; 
+  width: 100%;
+  border-radius: 4px;
+  position: absolute;
+}
+
+/* uv */
+.small.uv {
+  position: relative;
+}
+.uv-container {
+  position: absolute;
+  left: 33px;
+  top: 5px;
+  transition: transform 0.3s ease-in-out;
+}
+.uv-container:hover{
+  transform: scale(0.1);
+}
+.uv-text {
+  position: absolute; 
+  top: 0px;
+  left: 10px;
+  width: 145px;
+  height: 110px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.uv-head{
+  color: #ae47f5;
+  font-weight: bold;
+  position: absolute;
+  left: 15px;
+  top:7px;
+}
+
+.uv-text span {
+  font-size: 23px;
+  font-weight: bolder;
+}
+
+.uv-evaluate{
+  width: 145px;
+  text-align: center;
+  font-size: large;
+  font-weight: bold ;
+  position: absolute;
+  top: 100px;
+}
+
+.sun-text-container{
+  position: relative;
+  width: 145px;
+}
+
+.sun-graph {
+  left: -3px;
+  position: absolute;
+  width: 230px;
+  height: 100px;
+  transition: transform 0.3s ease-in-out;
+}
+
+.sun-graph:hover{
+  transform: scale(1.3);
+}
+
+.sun-text{
+  font-size: 12px;
+  font-weight: bold;
+  position: absolute;
+  top: 70px;
+  left: 30px;
+}
+
+.sun-text i {
+  margin-right: 10px;
+}
+
+.rise{
+  color:#C73E1D;
+}
+
+.set{
+  color: #ae47f5;
+}
+
+@keyframes glow {
+  0% {
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.6);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(255, 215, 0, 1);
+  }
+  100% {
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.6);
+  }
+}

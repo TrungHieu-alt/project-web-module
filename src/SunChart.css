@@ -1,0 +1,39 @@
+.chart-container {
+    width: 145px;
+    height: 110px;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Arial', sans-serif;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .chart-duration {
+    font-size: 10px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 5px;
+  }
+  
+  .chart-labels {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    font-size: 8px;
+    color: #666;
+  }
+  
+  .chart-labels span {
+    font-weight: bold;
+  }
+  
+  .dot {
+    background: radial-gradient(circle, #ff7e39 60%, #ffffff 100%);
+    border-radius: 50%;
+    width: 8px;
+    height: 8px;
+    position: relative;
+  }
+  
