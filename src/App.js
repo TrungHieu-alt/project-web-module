@@ -4,6 +4,7 @@ import "@fortawesome/fontawesome-free/css/all.min.css";
 import './App.css';
 import mqtt from "mqtt";
 import debounce from "lodash.debounce";
+import { color } from 'chart.js/helpers';
 
 function App() {
   const [isOn, setIsOn] = useState(true);
@@ -42,38 +43,57 @@ function App() {
 
   useEffect(() => {
     const client = mqtt.connect(brokerUrl);
+  
     client.on("connect", () => {
-      console.log(`Connected to MQTT broker : ${brokerUrl} `);
+      console.log(`Connected to MQTT broker: ${brokerUrl}`);
       client.subscribe(receivedTopic, (err) => {
         if (!err) console.log(`Subscribed to topic: ${receivedTopic}`);
       });
     });
-
-   // Nhận dữ liệu từ broker
-  client.on("message", (receivedTopic, payload) => {
-    try {
-      const data = JSON.parse(payload.toString());
-      console.log("Received data:", data);
-
-      // Bỏ qua nếu trường source là "ai"
-      if (data.source === "web") {
-        console.log("Data ignored as source is 'web'");
-        return; // Dừng xử lý nếu source là "ai"
+  
+    // Nhận dữ liệu từ broker
+    client.on("message", (receivedTopic, payload) => {
+      try {
+        const data = JSON.parse(payload.toString());
+        console.log("Received data:", data);
+  
+        // Bỏ qua nếu trường source là "web"
+        if (data.source === "web") {
+          console.log("Data ignored as source is 'web'");
+          return;
+        }
+  
+        // Cập nhật state
+        if (data.brightness !== undefined) setIntensity(data.brightness);
+        if (data.isOn !== undefined) setIsOn(data.isOn);
+        if (data.color !== undefined) setSelectedColor(data.color);
+      } catch (error) {
+        console.error("Error parsing payload:", error);
       }
-
-      // Cập nhật state dựa trên dữ liệu nhận được
-      if (data.intensity !== undefined) setIntensity(data.intensity);
-      if (data.isOn !== undefined) setIsOn(data.isOn);
-    } catch (error) {
-      console.error("Error parsing payload:", error);
-    }
-  });
+    });
+  
     setMqttClient(client);
-
+  
+    // Dọn dẹp khi component bị unmount
     return () => {
-      client.end(); // Dọn dẹp khi component bị unmount
+      client.end();
+      console.log("MQTT client disconnected.");
     };
   }, []);
+  
+  // Theo dõi thay đổi của state
+  useEffect(() => {
+    console.log("Updated intensity:", intensity);
+  }, [intensity]);
+  
+  useEffect(() => {
+    console.log("Updated isOn:", isOn);
+  }, [isOn]);
+  
+  useEffect(() => {
+    console.log("Updated color:", selectedColor);
+  }, [selectedColor]);
+  
 
   // Hàm gửi dữ liệu qua MQTT
   const publishMessage = useCallback(
