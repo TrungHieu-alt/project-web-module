@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import ReactSlider from 'react-slider';
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import './App.css';
-
-//uv: tâm 90.5 80, điểm bắt đầu 52 148, 2: 18.7 105
+import mqtt from "mqtt";
+import debounce from "lodash.debounce";
 
 function App() {
   const [isOn, setIsOn] = useState(true);
@@ -11,7 +11,9 @@ function App() {
   const [selectedMode, setSelectedMode] = useState('white');
   const [selectedColor, setSelectedColor] = useState('#FFFFFF');
   const [lastColor, setLastColor] = useState('');
-  const [intensity, setIntensity] = useState(89); // Thêm state cho độ sáng
+  const [intensity, setIntensity] = useState(89); 
+
+  // Các biến cho phần weather
   const [time, setTime] = useState('');
   const [lastUpdated, setLastUpdated] = useState('');
   const [temperature, setTemperature] = useState('');
@@ -27,20 +29,77 @@ function App() {
   const [sunrise, setSunrise] = useState("");
   const [sunset, setSunset] = useState("");
 
+  // Phần mqtt 
+  const brokerUrl = "ws://broker.emqx.io:8083/mqtt"; // WebSocket URL của Mosquitto
+  const topic = "emotion_topic"; // Topic giao tiếp
+  const receivedTopic = "emotion_updates"
+  const [mqttClient, setMqttClient] = useState(null);
+
   useEffect(() => {
     setUvPointX((52 - 90.5) * Math.cos(uv*( Math.PI /10 + 0.12) - 0.2) - (148-80) * Math.sin(uv*( Math.PI /10 + 0.12) - 0.2) + 90.5);
     setUvPointY((52 - 90.5) * Math.sin(uv*( Math.PI /10 + 0.12) -0.2) + (148-80) * Math.cos(uv*( Math.PI /10 + 0.12) - 0.2) + 80);
-  }, [uv]); // Dependency array chứa count
+  }, [uv]); 
+
+  useEffect(() => {
+    const client = mqtt.connect(brokerUrl);
+    client.on("connect", () => {
+      console.log(`Connected to MQTT broker : ${brokerUrl} `);
+      client.subscribe(receivedTopic, (err) => {
+        if (!err) console.log(`Subscribed to topic: ${receivedTopic}`);
+      });
+    });
+
+   // Nhận dữ liệu từ broker
+  client.on("message", (receivedTopic, payload) => {
+    try {
+      const data = JSON.parse(payload.toString());
+      console.log("Received data:", data);
+
+      // Bỏ qua nếu trường source là "ai"
+      if (data.source === "web") {
+        console.log("Data ignored as source is 'web'");
+        return; // Dừng xử lý nếu source là "ai"
+      }
+
+      // Cập nhật state dựa trên dữ liệu nhận được
+      if (data.intensity !== undefined) setIntensity(data.intensity);
+      if (data.isOn !== undefined) setIsOn(data.isOn);
+    } catch (error) {
+      console.error("Error parsing payload:", error);
+    }
+  });
+    setMqttClient(client);
+
+    return () => {
+      client.end(); // Dọn dẹp khi component bị unmount
+    };
+  }, []);
+
+  // Hàm gửi dữ liệu qua MQTT
+  const publishMessage = useCallback(
+    debounce((data) => {
+      if (mqttClient && mqttClient.connected) {
+        mqttClient.publish(topic, JSON.stringify(data), (err) => {
+          if (err) {
+            console.error("Failed to publish message:", err);
+          } else {
+            console.log("Message published:", data);
+          }
+        });
+      }
+    }, 300), // Delay 300ms
+    [mqttClient]
+  );
 
   const modes = {
-    White: { label: 'Ban ngày', color: '#F5F5F5' },          // Trắng nhạt
-    Black: { label: 'Ban đêm', color: '#3A5A5A' },            // Slate Gray nhẹ hơn
-    Purple: { label: 'Tinh tế', color: '#A384A3' },        // Purple nhạt 
-    Blue: { label: 'Thư giãn', color: '#C0D8F0' },          // Light Blue nhạt
-    Green: { label: 'Yên tĩnh', color: '#98FB98' },        // Pale Green (Xanh Lá Nhạt)
-    Yellow: { label: 'Vui vẻ', color: '#FFFF99' },        // Vàng nhạt  Hạnh phúc
-    Red: { label: 'Kích thích', color: '#FF6666' },           // Đỏ nhạt  Năng lượng
-    Cyan: { label: 'Tập trung', color: '#66CCCC' },          // Cyan nhạt
+    White: { label: 'Day', color: '#F5F5F5' },          // Trắng nhạt
+    Black: { label: 'Night', color: '#3A5A5A' },            // Slate Gray nhẹ hơn
+    Purple: { label: 'Subtle', color: '#A384A3' },        // Purple nhạt 
+    Blue: { label: 'Relaxed', color: '#C0D8F0' },          // Light Blue nhạt
+    Green: { label: 'Calm', color: '#98FB98' },        // Pale Green (Xanh Lá Nhạt)
+    Yellow: { label: 'Joyful', color: '#FFFF99' },        // Vàng nhạt  Hạnh phúc
+    Red: { label: 'Energetic', color: '#FF6666' },           // Đỏ nhạt  Năng lượng
+    Cyan: { label: 'Focused', color: '#66CCCC' },          // Cyan nhạt
   };
 
   const toggleLight = () => {
@@ -51,10 +110,12 @@ function App() {
     else{
       setSelectedColor(lastColor);
     }
+    publishMessage({source: "web", isOn: `${!isOn}` });
     setIsOn(!isOn);
   };
 
   const toggleAi = () => {
+    publishMessage({source: "web", ai: `${!aiOn}`});
     setAiOn(!aiOn);
   };
 
@@ -62,12 +123,19 @@ function App() {
     setSelectedMode(mode);
     if(isOn){
       setSelectedColor(modes[mode].color);
+      publishMessage({ source: "web", color: `${modes[mode].color}`});
     }
     else{
       setSelectedColor('#000000');
       setLastColor(modes[mode].color);
     }
   };
+
+  const handleIntensityChange = (value) => {
+    setIntensity(value);
+    publishMessage({source: "web", intensity: value});
+  };
+
 
   // Hàm lấy thời gian hiện tại
   const updateTime = () => {
@@ -78,7 +146,7 @@ function App() {
     const hours = String(now.getHours()).padStart(2, '0'); // Giờ
     const minutes = String(now.getMinutes()).padStart(2, '0'); // Phút
     const seconds = String(now.getSeconds()).padStart(2, '0'); // Giây
-    setTime(`${day}/${month}/${year} -- ${hours}:${minutes}:${seconds}`); // Định dạng Ngày/Tháng/Năm Giờ:Phút:Giây
+    setTime(`${day}/${month}/${year} -- ${hours}:${minutes}:${seconds}`); // Định dạng Ngày/Tháng/Năm -- Giờ:Phút:Giây
 };
 
 
@@ -121,9 +189,6 @@ function App() {
     return () => clearInterval(interval);
   }, []);
 
-  const handleIntensityChange = (value) => {
-    setIntensity(value); // Cập nhật độ sáng khi người dùng thay đổi thanh trượt
-  };
 
   return (
     <div className="main">
