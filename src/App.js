@@ -4,7 +4,6 @@ import "@fortawesome/fontawesome-free/css/all.min.css";
 import './App.css';
 import mqtt from "mqtt";
 import debounce from "lodash.debounce";
-import { color } from 'chart.js/helpers';
 
 function App() {
   const [isOn, setIsOn] = useState(true);
@@ -112,14 +111,14 @@ function App() {
   );
 
   const modes = {
-    White: { label: 'Day', color: '#F5F5F5' },          // Trắng nhạt
-    Black: { label: 'Night', color: '#3A5A5A' },            // Slate Gray nhẹ hơn
-    Purple: { label: 'Subtle', color: '#A384A3' },        // Purple nhạt 
-    Blue: { label: 'Relaxed', color: '#C0D8F0' },          // Light Blue nhạt
-    Green: { label: 'Calm', color: '#98FB98' },        // Pale Green (Xanh Lá Nhạt)
-    Yellow: { label: 'Joyful', color: '#FFFF99' },        // Vàng nhạt  Hạnh phúc
-    Red: { label: 'Energetic', color: '#FF6666' },           // Đỏ nhạt  Năng lượng
-    Cyan: { label: 'Focused', color: '#66CCCC' },          // Cyan nhạt
+    White: { label: 'Day', color: '#F5F5F5', sentColor: '#FFFFFF' },          // Trắng nhạt
+    Black: { label: 'Night', color: '#3A5A5A', sentColor: '#000000' },            // Slate Gray nhẹ hơn
+    Purple: { label: 'Subtle', color: '#A384A3', sentColor: '#FF00FF' },        // Purple nhạt 
+    Blue: { label: 'Relaxed', color: '#C0D8F0', sentColor: '#0000FF' },          // Light Blue nhạt
+    Green: { label: 'Calm', color: '#98FB98', sentColor: '#00FF00' },        // Pale Green (Xanh Lá Nhạt)
+    Yellow: { label: 'Joyful', color: '#FFFF99',  sentColor: '#FFFF00' },        // Vàng nhạt  Hạnh phúc
+    Red: { label: 'Energetic', color: '#FF6666', sentColor: '#FF0000' },           // Đỏ nhạt  Năng lượng
+    Cyan: { label: 'Focused', color: '#66CCCC', sentColor: '#00FFFF' },          // Cyan nhạt
   };
 
   const toggleLight = () => {
@@ -141,12 +140,11 @@ function App() {
     }
     setAiOn(!aiOn);
   };
-
   const handleModeChange = (mode) => {
     setSelectedMode(mode);
     if(isOn){
       setSelectedColor(modes[mode].color);
-      publishMessage({ source: "web", color: `${modes[mode].color}`});
+      publishMessage({ source: "web", color: `${modes[mode].sentColor}`});
     }
     else{
       setSelectedColor('#000000');
