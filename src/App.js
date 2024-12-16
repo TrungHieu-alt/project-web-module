@@ -136,6 +136,9 @@ function App() {
 
   const toggleAi = () => {
     publishMessage({source: "web", ai: `${!aiOn}`});
+    if(!aiOn) {
+      setIsOn(true);
+    }
     setAiOn(!aiOn);
   };
 
