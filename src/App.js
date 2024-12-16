@@ -112,15 +112,15 @@ function App() {
   );
 
   const modes = {
-    White: { label: 'Day', color: '#F5F5F5' },          // Trắng nhạt
-    Black: { label: 'Night', color: '#3A5A5A' },            // Slate Gray nhẹ hơn
-    Purple: { label: 'Subtle', color: '#A384A3' },        // Purple nhạt 
-    Blue: { label: 'Relaxed', color: '#C0D8F0' },          // Light Blue nhạt
-    Green: { label: 'Calm', color: '#98FB98' },        // Pale Green (Xanh Lá Nhạt)
-    Yellow: { label: 'Joyful', color: '#FFFF99' },        // Vàng nhạt  Hạnh phúc
-    Red: { label: 'Energetic', color: '#FF6666' },           // Đỏ nhạt  Năng lượng
-    Cyan: { label: 'Focused', color: '#66CCCC' },          // Cyan nhạt
-  };
+    White: { label: "Day", color: "#F5F5F5" },
+    Black: { label: "Night", color: "#3A5A5A" },
+    Purple: { label: "Subtle", color: "#A384A3" },
+    Blue: { label: "Relaxed", color: "#B2DFEE" },
+    Green: { label: "Calm", color: "#98FB98" },
+    Yellow: { label: "Joyful", color: "#FFFF99" },
+    Red: { label: "Energetic", color: "#F08080" },
+    Cyan: { label: "Focused", color: "#E0FFFF" },
+  }
 
   const toggleLight = () => {
     if(isOn){
